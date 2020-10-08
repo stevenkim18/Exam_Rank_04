@@ -54,6 +54,7 @@ void	clear(t_cmd *cmd)
 	int		i = 0;
 	while (cmd)
 	{
+		i = 0;			// 이부분 꼭 작성..
 		while (cmd->args[i])
 		{
 			free(cmd->args[i]);
@@ -105,7 +106,49 @@ int	ft_cd(t_cmd *cmd)
 		ft_putstr(cmd->args[1]);
 		ft_putstr("\n");
 	}
-	printf("res = %d\n", res);
+	return (res);
+}
+
+int	ft_non_builtin(t_cmd *cmd)
+{
+	extern char **environ;
+	pid_t		pid;
+	int			res = 0;
+	int			status;
+	if (cmd->is_pipe)
+		if (pipe(cmd->fd) < 0)
+			exit_fatal();
+	pid = fork();
+	if (pid < 0)
+		exit_fatal();
+	else if (pid == 0)
+	{
+		if (cmd->is_pipe && dup2(cmd->fd[1], 1) < 0)
+			exit_fatal();
+		if (cmd->prev && cmd->prev->is_pipe && dup2(cmd->prev->fd[0], 0) < 0)
+			exit_fatal();
+		if ((res = execve(cmd->args[0], cmd->args, environ)) < 0)
+		{
+			ft_putstr("error: cannot execute ");
+			ft_putstr(cmd->args[0]);
+			ft_putstr("\n");
+		}
+		exit(res);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			res = WEXITSTATUS(status);
+		if (cmd->is_pipe)
+		{
+			close(cmd->fd[1]);
+			if (!cmd->next)
+				close(cmd->fd[0]);
+		}
+		if (cmd->prev && cmd->prev->is_pipe)
+			close(cmd->prev->fd[0]);
+	}
 	return (res);
 }
 
@@ -117,8 +160,8 @@ int	exec(t_cmd *cmd)
 	{
 		if (!strcmp(cmd->args[0], "cd"))
 			res = ft_cd(cmd);
-		//else
-		//	res = ft_non_builtin(cmd);
+		else
+			res = ft_non_builtin(cmd);
 		cmd = cmd->next;
 	}
 	return (res);
@@ -157,7 +200,6 @@ int	main(int argc, char **argv)
 		last++;
 	}
 	res = exec(cmd);
-	printf("res = %d\n", res);
 	clear(cmd);
 	return (res);
 }

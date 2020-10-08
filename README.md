@@ -1,17 +1,17 @@
 # Exam_Rank_04
 
-## 문제 번역   
-- Assignment name  : microshell   
-- Expected files   : *.c *.h   
-- Allowed functions: malloc, free, write, close, fork, waitpid, signal, kill, exit, chdir, execve, dup,  dup2, pipe, strcmp, strncmp   
+## 문제 번역
+- Assignment name  : microshell
+- Expected files   : *.c *.h
+- Allowed functions: malloc, free, write, close, fork, waitpid, signal, kill, exit, chdir, execve, dup,  dup2, pipe, strcmp, strncmp
 
----   
+---
 
 - 쉘 처럼 작동하는 프로그램을 만들어라!
 - 싱대경로, 절대경로로만 작동(cd 제외)
 - 파이프와 세미콜론이 쉘 처럼 작동해야 함.
     - 파이프 뒤에 아무것도 안오거나 바로 파이프나 세미콜론이 나오는 케이스들은 고려 안함("| |", "echo 123 |", ";|")
-- "cd"는 빌트인 함수(chdir)를 사용 
+- "cd"는 빌트인 함수(chdir)를 사용
     - 경로나 , '~' 는 구현, '-'는 No
     - 인자가 한개가 아니면 "error: cd: bad arguments" 출력
     - 경로가 잘못 되었으면 "error: cd: cannot change directory to path_to_change" 출력
@@ -25,3 +25,13 @@
 ### 힌트
 - execve 에 환경 변수를 넘겨라
 - fd를 누수 시키지 마라.
+
+
+## 개념 복습
+### pipe
+- https://nroses-taek.tistory.com/139
+- https://github.com/LambdaSchool/CS-Wiki/wiki/How-Unix-Pipes-are-Implemented
+
+### dup, dup2
+- https://reakwon.tistory.com/104
+
