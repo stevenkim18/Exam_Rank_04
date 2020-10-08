@@ -88,7 +88,22 @@ t_cmd	*create_cmd(t_cmd *tmp, char **argv, int argv_num, int is_pipe)
 	return (new);
 }
 
-int main(int argc, char **argv)
+int	exec(t_cmd *cmd)
+{
+	int		res = 0;
+	
+	while (cmd)
+	{
+		if (!strcmp(argv[0], "cd"))
+			res = ft_cd(cmd);
+		else
+			res = ft_non_builtin(cmd);
+		cmd = cmd->next;
+	}
+	return (res);
+}
+
+int	main(int argc, char **argv)
 {
 	t_cmd	*cmd;
 	t_cmd	*tmp;
@@ -131,5 +146,7 @@ int main(int argc, char **argv)
 		}
 		cmd = cmd->next;
 	}
+	res = exec(cmd);
 	clear(cmd);
+	return (res);
 }
