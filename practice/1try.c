@@ -88,16 +88,37 @@ t_cmd	*create_cmd(t_cmd *tmp, char **argv, int argv_num, int is_pipe)
 	return (new);
 }
 
+int	ft_cd(t_cmd *cmd)
+{
+	int		i = 0;
+	int		res = 0;
+	while (cmd->args[i])
+		i++;
+	if (i != 2)
+	{
+		ft_putstr("error: cd: bad arguments\n");
+		return (1);
+	}
+	else if ((res = chdir(cmd->args[1])) < 0)
+	{
+		ft_putstr("error: cd: cannot change directory to ");
+		ft_putstr(cmd->args[1]);
+		ft_putstr("\n");
+	}
+	printf("res = %d\n", res);
+	return (res);
+}
+
 int	exec(t_cmd *cmd)
 {
 	int		res = 0;
 	
 	while (cmd)
 	{
-		if (!strcmp(argv[0], "cd"))
+		if (!strcmp(cmd->args[0], "cd"))
 			res = ft_cd(cmd);
-		else
-			res = ft_non_builtin(cmd);
+		//else
+		//	res = ft_non_builtin(cmd);
 		cmd = cmd->next;
 	}
 	return (res);
@@ -111,7 +132,6 @@ int	main(int argc, char **argv)
 	int		last = 1;
 	int		is_pipe = 0;
 	int		res = 0;
-	int		i = 0;
 	
 	while (last < argc)
 	{
@@ -136,17 +156,8 @@ int	main(int argc, char **argv)
 		}
 		last++;
 	}
-	while (cmd)
-	{
-		i = 0;
-		while (cmd->args[i])
-		{
-			printf("%s\n", cmd->args[i]);
-			i++;
-		}
-		cmd = cmd->next;
-	}
 	res = exec(cmd);
+	printf("res = %d\n", res);
 	clear(cmd);
 	return (res);
 }
