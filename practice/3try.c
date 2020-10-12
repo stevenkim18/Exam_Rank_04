@@ -58,7 +58,7 @@ void	clear(t_cmd *cmd)
 			free(cmd->args[i]);
 			i++;
 		}
-		free(cmd->args[i]);
+		free(cmd->args);
 		tmp = cmd;
 		cmd = cmd->next;
 		free(tmp);
