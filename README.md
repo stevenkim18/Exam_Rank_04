@@ -35,3 +35,6 @@
 ### dup, dup2
 - https://reakwon.tistory.com/104
 
+## 시험 통과!!(201013)
+### extern char **environ 사용하면 안됨.
+### main 매개변수 char **env 계속 넘겨서 execve의 3번째 매개변수로 전달해야 함.
